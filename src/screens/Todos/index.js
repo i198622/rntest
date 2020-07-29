@@ -1,68 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { View, Text, Modal, Alert, TouchableHighlight, ActivityIndicator, Image, StyleSheet } from 'react-native'
 import axios from 'axios'
-import { PRIMARY, WHITE, BLACK } from '../../constants'
+import { PRIMARY, WHITE, SHADOW, TRANSPARENT, BLACK, RED } from '../../constants'
 import { Header } from '../../components'
 import { SwipeListView } from 'react-native-swipe-list-view'
-const NOTIF = [
-  {
-    id: 1,
-    title: 'Your pizza order placed successfully',
-    details: 'Your pizza order to snack corner has been accepted and being processed.',
-  },
-  {
-    id: 2,
-    title: 'Your bengali thali order has been delivered',
-    details: 'Your bengali thali has been delivered by Delicious Bong Recipe.',
-  },
-  {
-    id: 3,
-    title: 'Out for delivery',
-    details: 'Bengali thali will reach to you within 30 minutes.',
-  },
-  {
-    id: 4,
-    title: 'Your bengali thali order placed successfully',
-    details: 'Your bengali thali order to Delicious Bong Recipe has been accepted and being processed.',
-  },
-  {
-    id: 5,
-    title: 'Money added to your wallet',
-    details: '₹ 1,000/- has been added to your wallet successfully and remaining balance is ₹ 1,150/-',
-  },
-  {
-    id: 6,
-    title: 'Add money to your wallet',
-    details: 'Only ₹ 150/- is left in your wallet. Add some more amount to place your order quickly.',
-  },
-  {
-    id: 7,
-    title: 'Check new Pizza Corner within 1 km',
-    details: 'A new Pizza Corner is being loved by more people around you.',
-  },
-  {
-    id: 8,
-    title: 'Check new Roll Center within 3 km',
-    details: 'A new roll center is being loved by more people around you.',
-  },
-  {
-    id: 9,
-    title: 'Check new Crispy Chicken within 3 km',
-    details: 'A new Crispy Chicken is being loved by more people around you.',
-  },
-  {
-    id: 10,
-    title: 'Check new Snacks Corner within 5 km',
-    details: 'A new Snacks Corner is being loved by more people around you.',
-  },
-]
+
 const Todos = ({ navigation }) => {
   const [loading, setLoading] = useState(false)
   const [dataSource, setDataSource] = useState([])
   const [page, setPage] = useState(1)
   const [modalVisible, setModalVisible] = useState(false)
 
-  const { flatListViewStyle, modalContainer, modalItem, footer, separator, img } = styles
+  const { flatListViewStyle, authorStyle, modalContainer, modalItem, footer, separator, img } = styles
 
   useEffect(() => {
     fetchData()
@@ -103,7 +52,7 @@ const Todos = ({ navigation }) => {
         <View style={flatListViewStyle}>
           <Image source={{ uri: item.download_url }} style={img} />
           <View style={{ marginLeft: 10 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{authorArray[0]}</Text>
+            <Text style={authorStyle}>{authorArray[0]}</Text>
             <Text>{authorArray[1]}</Text>
           </View>
         </View>
@@ -190,6 +139,10 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 5,
   },
+  authorStyle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
   separator: {
     height: 3,
     width: '100%',
@@ -206,13 +159,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'green',
+    backgroundColor: TRANSPARENT,
   },
   modalItem: {
     width: 300,
     height: '90%',
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: WHITE,
     borderRadius: 20,
     padding: 10,
     shadowColor: BLACK,
@@ -225,12 +178,12 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   rowFront: {
-    backgroundColor: '#FFF',
+    backgroundColor: WHITE,
     borderRadius: 5,
     height: 60,
     margin: 5,
     marginBottom: 15,
-    shadowColor: '#999',
+    shadowColor: SHADOW,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
@@ -238,7 +191,7 @@ const styles = StyleSheet.create({
   },
   rowBack: {
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -259,7 +212,7 @@ const styles = StyleSheet.create({
     right: 75,
   },
   backRightBtnRight: {
-    backgroundColor: 'red',
+    backgroundColor: RED,
     height: 80,
     right: 0,
     borderRadius: 10,
@@ -273,68 +226,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 5,
-    color: '#666',
+    color: SHADOW,
   },
   details: {
     fontSize: 12,
-    color: '#999',
+    color: SHADOW,
   },
 })
 
 export { Todos }
-
-/*
-     
-  const closeRow = (rowMap, rowKey) => {
-    if (rowMap[rowKey]) {
-      rowMap[rowKey].closeRow()
-    }
-  }
-  const deleteRow = (rowMap, rowKey) => {
-    closeRow(rowMap, rowKey)
-    const newData = [...listData]
-    const prevIndex = listData.findIndex((item) => item.key === rowKey)
-    newData.splice(prevIndex, 1)
-    setListData(newData)
-  }
-
-  const HiddenItemsWithActions = (props) => {
-    const { onClose, onDelete } = props
-    return (
-      <View style={styles.rowBack}>
-        <Text>Left</Text>
-        <TouchableHighlight style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={onClose}>
-          <Text style={{ color: 'white' }}>Close</Text>
-        </TouchableHighlight>
-        <TouchableHighlight style={[styles.backRightBtn, styles.backRightBtnRight]} onPress={onDelete}>
-          <Text style={{ color: 'white' }}>Delete</Text>
-        </TouchableHighlight>
-      </View>
-    )
-  }
-  const renderHiddenItem = (data, rowMap) => {
-    return (
-      <HiddenItemsWithActions
-        data={data}
-        rowMap={rowMap}
-        onClose={() => closeRow(rowMap, data.item.key)}
-        onDelete={() => deleteRow(rowMap, data.item.key)}
-      />
-    )
-  }
-<FlatList
-              data={data}
-              renderItem={({ item }) => (
-                <View style={flatListViewStyle}>
-                  <Image source={{ uri: item.download_url }} style={img} />
-                  <Text>{item.author}</Text>
-                </View>
-              )}
-              keyExtractor={(item) => item.id}
-              showsVerticalScrollIndicator={false}
-              ItemSeparatorComponent={renderSeparator}
-              ListFooterComponent={renderFooter}
-              onEndReached={handleLoadMore}
-              onEndReachedThreshold={0}
-            />
- */
