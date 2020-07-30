@@ -1,8 +1,19 @@
 import React from 'react';
-import {Text} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export const headerSettings = ({navigation}) => {
   return {
-    headerLeft: () => <Text onPress={navigation.toggleDrawer}>иконка</Text>,
+    headerLeft: () => (
+      <Icon
+        onPress={navigation.toggleDrawer}
+        name="bars"
+        size={28}
+        style={iconStyle}
+      />
+    ),
   };
+};
+
+const iconStyle = {
+  marginLeft: 15,
 };
